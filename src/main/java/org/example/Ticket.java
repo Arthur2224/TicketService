@@ -5,16 +5,16 @@ import java.util.Date;
 import java.util.Random;
 
 public class Ticket {
-    private String id;
+    private  String id;
     private String concertHall;
     private int eventCode;
-    private long time;
+    private final long time; // variable doesn't need to be changed
     private boolean isPromo;
     private StadiumSectors stadiumSector;
     private double maxBackpackWeight;
     private double price=0.0;
 
-    private long getCreationTime(){ // method thats provides detection and saves the time of creation
+    private long getCreationTime(){ // method that's provides detection and saves the time of creation
         return System.currentTimeMillis(); // Unix timestamp
     }
     public void setPrice(double price) { // setter for price
@@ -23,7 +23,7 @@ public class Ticket {
         else
             throw new IllegalArgumentException("price can not be negative");
     }
-    public void setId(String id){ // Setter for id
+    private void setId(String id){ // Private because in other cases (limited or empty constructor sets id automatically, also id, in global, can not be changed because it is a unique value for ticket (identifier). I decided to hide from users ability to set id more than once
         if(id.length()>4)
             throw  new IllegalArgumentException("ID length is too long, max length is 4 symbols");
         else
@@ -42,7 +42,7 @@ public class Ticket {
             this.eventCode=eventCode;
     }
 
-    public void setId() { // Overloading SetId method, for empty or limited constructors where user doesn't set id
+    private void setId() { // Overloading SetId method, for empty or limited constructors where user doesn't set id
         if (this.id == null) {
             this.id = ""; // initialize id
             Random random = new Random();
@@ -61,7 +61,7 @@ public class Ticket {
         }
     }
     public Ticket(String id, String concertHall, int eventCode, boolean isPromo, StadiumSectors stadiumSector, double maxBackpackWeight,double price) {
-        setId(id);
+        setId(id); // checking length
         setConcertHall(concertHall);
         setEventCode(eventCode);
         this.time=getCreationTime();
@@ -71,7 +71,7 @@ public class Ticket {
         setPrice(price);
     }
     public Ticket(String concertHall, int eventCode) {
-        setId(); // also generate id to identify ticket from other tickets
+        setId(); // generate id
         setConcertHall(concertHall);
         this.eventCode = eventCode;
         this.time = getCreationTime();
