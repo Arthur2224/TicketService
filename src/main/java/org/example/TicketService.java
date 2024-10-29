@@ -1,10 +1,12 @@
 package org.example;
 
+import java.math.BigDecimal;
+
 public class TicketService {
     public static void main(String[] args) {
 
         //full constructor
-        Ticket ticket1 = new Ticket("AE86", "Red Rocks", 111, true, StadiumSectors.C, 2.0,100.25);
+        Ticket ticket1 = new Ticket("Red Rocks", 111, true, StadiumSectors.C, 2.0, BigDecimal.valueOf(5.34));
         //limited constructor
         Ticket ticket2 = new Ticket("La Scala", 102);
         //empty constructor
@@ -16,8 +18,5 @@ public class TicketService {
         System.out.println(ticket3);
 
 
-
-
-
-        }
     }
+}
