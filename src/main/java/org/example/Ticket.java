@@ -38,6 +38,8 @@ public class Ticket {
         setPrice(price);
     }
 
+
+
     private long getCreationTime() { // method that's provides detection and saves the time of creation
         return System.currentTimeMillis(); // Unix timestamp
     }
@@ -63,11 +65,14 @@ public class Ticket {
             this.eventCode = eventCode;
     }
 
+    public String getId(){
+        return this.id;
+    }
     private void setId() {
         if (this.id == null) {
             this.id = ""; // initialize id
             Random random = new Random();
-            int length = random.nextInt(4) + 2; // length from 2 to 4 (1 is too small)
+            int length = random.nextInt(3) + 2; // length from 2 to 4 (1 is too small)
 
             for (int i = 0; i < length; i++) {
                 int charOrInt = random.nextInt(2); // 0 for char, 1 for int
