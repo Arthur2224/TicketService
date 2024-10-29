@@ -13,6 +13,20 @@ public class TicketManager {
         tickets.add(ticket);
     }
 
+    public void printAllTickets() {
+        for (Ticket ticket : tickets) {
+            System.out.println(ticket);
+        }
+    }
+
+    public Ticket findTicketById(String id) {
+        for (Ticket ticket : tickets) {
+            if (ticket.getId() == id) {
+                return ticket;
+            }
+        }
+        return null;
+    }
 
 
 }

@@ -37,7 +37,8 @@ public class TicketService {
         ticketManager.addTicket(new Ticket("Rain", 118, true, StadiumSectors.A, 2.1, BigDecimal.valueOf(6.00)));
         ticketManager.addTicket(new Ticket("WaterFall", 128, true, StadiumSectors.C, 4.23, BigDecimal.valueOf(9.99)));
         ticketManager.addTicket(ticket_1);
-
+        ticketManager.printAllTickets();
+        System.out.println( "Find the ticked by ID ["+ticket_1.getId()+"]: " + ticketManager.findTicketById(ticket_1.getId()));
 
 
 
