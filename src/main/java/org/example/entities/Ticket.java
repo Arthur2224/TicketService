@@ -21,32 +21,34 @@ public class Ticket implements Identifiable, Printable {
 
     public Ticket() {
         setId();
-        this.time = getCreationTime();
+        setTime();
     }
 
     public Ticket(String concertHall, int eventCode) {
         setId(); // generate id
         setConcertHall(concertHall);
+        setTime();
         this.eventCode = eventCode;
-        this.time = getCreationTime();
+
     }
 
     public Ticket(String concertHall, int eventCode, boolean isPromo, StadiumSectors stadiumSector, double maxBackpackWeight, BigDecimal price) {
         setId();
         setConcertHall(concertHall);
         setEventCode(eventCode);
-        this.time = getCreationTime();
+        setTime();
         this.isPromo = isPromo;
         this.stadiumSector = stadiumSector;
         this.maxBackpackWeight = maxBackpackWeight;
         setPrice(price);
     }
+
     public long getTime() {
         return time;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setTime() {
+       this.time= getCreationTime();
     }
     public void setStadiumSector(StadiumSectors stadiumSector){
         this.stadiumSector=stadiumSector;

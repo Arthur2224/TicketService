@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.entities.ShareableTicket;
 import org.example.entities.Ticket;
 import org.example.enums.StadiumSectors;
 import org.example.utilities.TicketUtility;
@@ -43,6 +44,11 @@ public class TicketService {
         ticketUtility.addTicket(ticket_1);
         ticketUtility.printAllTickets();
         System.out.println( "Find the ticked by ID ["+ticket_1.getId()+"]: " + ticketUtility.findTicketById(ticket_1.getId()));
+
+        System.out.println("ShareableTickets");
+        ShareableTicket shareableTicket1=new ShareableTicket(StadiumSectors.A);
+        shareableTicket1.shared("111111");
+        shareableTicket1.shared("11111","email@email.com");
 
 
 
