@@ -8,7 +8,8 @@ import java.util.Date;
 import java.util.Random;
 
 public class Ticket implements Identifiable, Printable {
-    private final long time; // variable doesn't need to be changed
+
+    private long time; // variable doesn't need to be changed
     private int id;
     private String concertHall;
     private int eventCode;
@@ -38,6 +39,16 @@ public class Ticket implements Identifiable, Printable {
         this.stadiumSector = stadiumSector;
         this.maxBackpackWeight = maxBackpackWeight;
         setPrice(price);
+    }
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+    public void setStadiumSector(StadiumSectors stadiumSector){
+        this.stadiumSector=stadiumSector;
     }
 
     public StadiumSectors getStadiumSector() {
