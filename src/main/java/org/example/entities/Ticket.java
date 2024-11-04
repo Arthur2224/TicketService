@@ -1,5 +1,6 @@
-package org.example;
+package org.example.entities;
 
+import org.example.enums.StadiumSectors;
 import org.example.interfaces.Identifiable;
 import org.example.interfaces.Printable;
 
@@ -9,7 +10,7 @@ import java.util.Random;
 
 public class Ticket implements Identifiable, Printable {
 
-    private long time; // variable doesn't need to be changed
+    private long time;
     private int id;
     private String concertHall;
     private int eventCode;

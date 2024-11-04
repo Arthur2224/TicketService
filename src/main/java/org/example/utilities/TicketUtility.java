@@ -1,9 +1,12 @@
-package org.example;
+package org.example.utilities;
+
+import org.example.entities.Ticket;
+import org.example.enums.StadiumSectors;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TicketManager {
+public class TicketUtility {
 
   private final List<Ticket> tickets = new ArrayList<>();
 
@@ -25,7 +28,7 @@ public class TicketManager {
         }
     }
 
-    public Ticket findTicketById(String id) {
+    public Ticket findTicketById(int id) {
         for (Ticket ticket : tickets) {
             if (ticket.getId() == id) {
                 return ticket;
