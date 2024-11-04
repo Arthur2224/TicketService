@@ -1,13 +1,15 @@
 package org.example;
 
+import org.example.interfaces.Identifiable;
+import org.example.interfaces.Printable;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Random;
 
-public class Ticket {
+public class Ticket implements Identifiable, Printable {
     private final long time; // variable doesn't need to be changed
-    private String id;
+    private int id;
     private String concertHall;
     private int eventCode;
     private boolean isPromo;
@@ -38,21 +40,18 @@ public class Ticket {
         setPrice(price);
     }
 
-
-
-    private long getCreationTime() { // method that's provides detection and saves the time of creation
-        return System.currentTimeMillis(); // Unix timestamp
-    }
-
     public StadiumSectors getStadiumSector() {
         return stadiumSector;
+    }
+    private long getCreationTime() { // method that provides detection and saves the time of creation
+        return System.currentTimeMillis(); // Unix timestamp
     }
 
     public void setPrice(BigDecimal price) { // setter for price
         if (price.compareTo(BigDecimal.ZERO) > 0)
             this.price = price;
         else
-            throw new IllegalArgumentException("price can not be negative");
+            throw new IllegalArgumentException("Price cannot be negative");
     }
 
     public void setConcertHall(String concertHall) { // Setter for concertHall
@@ -69,32 +68,24 @@ public class Ticket {
             this.eventCode = eventCode;
     }
 
-    public String getId(){
+    public int getId() {
         return this.id;
     }
+
+    @Override
+    public void setId(int id) {
+        this.id = id;
+    }
+
     private void setId() {
-        if (this.id == null) {
-            this.id = ""; // initialize id
-            Random random = new Random();
-            int length = random.nextInt(3) + 2; // length from 2 to 4 (1 is too small)
-
-            for (int i = 0; i < length; i++) {
-                int charOrInt = random.nextInt(2); // 0 for char, 1 for int
-
-                if (charOrInt == 0) {
-                    this.id += (char) (random.nextInt(26) + 65); // A-Z unicode
-                } else { // generate a int
-                    this.id += random.nextInt(10); // 0-9
-                }
-            }
-
-        }
+        Random random = new Random();
+        this.id = random.nextInt(8999) + 1000; // Generates a 4-digit number from 1000 to 9999
     }
 
     @Override
     public String toString() {
         return "Ticket{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", concertHall='" + concertHall + '\'' +
                 ", eventCode=" + eventCode +
                 ", time=" + new Date(time) + // convert a time from unix to more readable format
@@ -103,5 +94,9 @@ public class Ticket {
                 ", maxBackpackWeight=" + maxBackpackWeight +
                 ", price=" + price +
                 '}';
+    }
+    @Override
+    public void print(){
+        System.out.println(this.toString());
     }
 }
