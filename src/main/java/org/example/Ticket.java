@@ -44,6 +44,10 @@ public class Ticket {
         return System.currentTimeMillis(); // Unix timestamp
     }
 
+    public StadiumSectors getStadiumSector() {
+        return stadiumSector;
+    }
+
     public void setPrice(BigDecimal price) { // setter for price
         if (price.compareTo(BigDecimal.ZERO) > 0)
             this.price = price;
