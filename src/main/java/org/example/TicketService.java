@@ -1,7 +1,6 @@
 package org.example;
 
-import org.example.entities.ShareableTicket;
-import org.example.entities.Ticket;
+import org.example.entities.*;
 import org.example.enums.StadiumSectors;
 import org.example.utilities.TicketUtility;
 
@@ -50,7 +49,14 @@ public class TicketService {
         shareableTicket1.shared("111111");
         shareableTicket1.shared("11111","email@email.com");
 
+        System.out.println("Users and theirs roles:");
+        Admin admin=new Admin();
+        admin.printRole();
+        admin.print();
 
+        Client client=new Client();
+        client.printRole();
+        client.print(); // from User class implementation of Printable
 
         }
 
