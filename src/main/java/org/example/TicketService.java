@@ -58,7 +58,14 @@ public class TicketService {
         client.printRole();
         client.print(); // from User class implementation of Printable
 
-        }
+        System.out.println("Overriting equal,hashcode:");
+
+        System.out.println(ticket_1.equals(new Admin())); // false
+        System.out.println(ticket_1.equals(ticket_1)); // true
+        System.out.println(ticket_1.equals(ticket_2)); // false
+        System.out.println(ticket_1.hashCode());
+        System.out.println(ticket_2.hashCode());
+    }
 
 
     }

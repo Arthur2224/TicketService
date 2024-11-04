@@ -113,4 +113,16 @@ public class Ticket implements Identifiable, Printable {
     public void print(){
         System.out.println(this.toString());
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Ticket ticket = (Ticket) obj;
+        return getId() == ticket.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(getId());
+    }
 }
