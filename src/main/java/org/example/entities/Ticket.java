@@ -2,6 +2,7 @@ package org.example.entities;
 
 import org.example.enums.StadiumSectors;
 import org.example.interfaces.Identifiable;
+import org.example.annotations.Nullable;
 import org.example.interfaces.Printable;
 
 import java.math.BigDecimal;
@@ -9,9 +10,9 @@ import java.util.Date;
 import java.util.Random;
 
 public class Ticket implements Identifiable, Printable {
-
+    @Nullable(key = "ID must not be NULL")
+    private Integer id; // switched to Integer because of default value of this type is Null for annotation task
     private long time;
-    private int id;
     private String concertHall;
     private int eventCode;
     private boolean isPromo;
@@ -20,7 +21,7 @@ public class Ticket implements Identifiable, Printable {
     private BigDecimal price = BigDecimal.valueOf(0.0);
 
     public Ticket() {
-        setId();
+        //setId(); just for checking how ID annotation works
         setTime();
     }
 

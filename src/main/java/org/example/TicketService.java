@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.annotations.AnnotaionProcessor;
 import org.example.entities.*;
 import org.example.enums.StadiumSectors;
 import org.example.utilities.TicketUtility;
@@ -29,7 +30,7 @@ public class TicketService {
         System.out.println(ticket_3);
 
         // GIT HOMETASK START FROM HERE
-
+        /*
         TicketUtility ticketUtility =new TicketUtility();
         ticketUtility.addTicket(new Ticket("Red Rocks", 111, true, StadiumSectors.C, 2.0, BigDecimal.valueOf(5.34)));
         ticketUtility.addTicket(new Ticket("Blue Sky", 112, true, StadiumSectors.A, 1.5, BigDecimal.valueOf(4.50)));
@@ -43,7 +44,8 @@ public class TicketService {
         ticketUtility.addTicket(ticket_1);
         ticketUtility.printAllTickets();
         System.out.println( "Find the ticked by ID ["+ticket_1.getId()+"]: " + ticketUtility.findTicketById(ticket_1.getId()));
-
+        */
+        // Solution for the latest task
         System.out.println("ShareableTickets");
         ShareableTicket shareableTicket1=new ShareableTicket(StadiumSectors.A);
         shareableTicket1.shared("111111");
@@ -58,13 +60,19 @@ public class TicketService {
         client.printRole();
         client.print(); // from User class implementation of Printable
 
-        System.out.println("Overriting equal,hashcode:");
+        System.out.println("Overwriting equal, hashcode:");
 
         System.out.println(ticket_1.equals(new Admin())); // false
         System.out.println(ticket_1.equals(ticket_1)); // true
         System.out.println(ticket_1.equals(ticket_2)); // false
         System.out.println(ticket_1.hashCode());
-        System.out.println(ticket_2.hashCode());
+
+        System.out.println("Annotation task:");
+        // Checks for fields annotated with @Nullable and prints a warning if they are null
+        Ticket nullIdTicket=new Ticket();
+        AnnotaionProcessor.checkNullValues(nullIdTicket);
+        AnnotaionProcessor.checkNullValues(ticket_1); // No warning
+
     }
 
 
