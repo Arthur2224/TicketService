@@ -2,9 +2,8 @@ package org.example.entities;
 
 import org.example.enums.StadiumSectors;
 
-public class ShareableTicket extends Ticket{
+public class ShareableTicket extends Ticket {
     public ShareableTicket(StadiumSectors stadiumSector) {
-        super();
         super.setStadiumSector(stadiumSector);
     }
 

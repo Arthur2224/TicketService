@@ -18,16 +18,16 @@ public class TicketService {
          */
 
         //full constructor
-        Ticket ticket_1 = new Ticket("Red Rocks", 111, true, StadiumSectors.C, 2.0, BigDecimal.valueOf(5.34));
+        Ticket ticketFullConstructor = new Ticket("Red Rocks", 111, true, StadiumSectors.C, 2.0, BigDecimal.valueOf(5.34));
         //limited constructor
-        Ticket ticket_2 = new Ticket("La Scala", 102);
+        Ticket ticketLimitedConstructor = new Ticket("La Scala", 102);
         //empty constructor
-        Ticket ticket_3 = new Ticket();
+        Ticket ticketEmptyConstructor = new Ticket();
 
         // printing the tickets
-        System.out.println(ticket_1);
-        System.out.println(ticket_2);
-        System.out.println(ticket_3);
+        System.out.println(ticketFullConstructor);
+        System.out.println(ticketLimitedConstructor);
+        System.out.println(ticketEmptyConstructor);
 
         // GIT HOMETASK START FROM HERE
         /*
@@ -41,9 +41,9 @@ public class TicketService {
         ticketUtility.addTicket(new Ticket("Cloud", 117, true, StadiumSectors.C, 1.2, BigDecimal.valueOf(3.80)));
         ticketUtility.addTicket(new Ticket("Rain", 118, true, StadiumSectors.A, 2.1, BigDecimal.valueOf(6.00)));
         ticketUtility.addTicket(new Ticket("WaterFall", 128, true, StadiumSectors.C, 4.23, BigDecimal.valueOf(9.99)));
-        ticketUtility.addTicket(ticket_1);
+        ticketUtility.addTicket(ticketFullConstructor);
         ticketUtility.printAllTickets();
-        System.out.println( "Find the ticked by ID ["+ticket_1.getId()+"]: " + ticketUtility.findTicketById(ticket_1.getId()));
+        System.out.println( "Find the ticked by ID ["+ticketFullConstructor.getId()+"]: " + ticketUtility.findTicketById(ticketFullConstructor.getId()));
         */
         // Solution for the latest task
         System.out.println("ShareableTickets");
@@ -62,16 +62,16 @@ public class TicketService {
 
         System.out.println("Overwriting equal, hashcode:");
 
-        System.out.println(ticket_1.equals(new Admin())); // false
-        System.out.println(ticket_1.equals(ticket_1)); // true
-        System.out.println(ticket_1.equals(ticket_2)); // false
-        System.out.println(ticket_1.hashCode());
+        System.out.println(ticketFullConstructor.equals(new Admin())); // false
+        System.out.println(ticketFullConstructor.equals(ticketFullConstructor)); // true
+        System.out.println(ticketFullConstructor.equals(ticketLimitedConstructor)); // false
+        System.out.println(ticketFullConstructor.hashCode());
 
         System.out.println("Annotation task:");
         // Checks for fields annotated with @Nullable and prints a warning if they are null
         Ticket nullIdTicket=new Ticket();
         AnnotaionProcessor.checkNullValues(nullIdTicket);
-        AnnotaionProcessor.checkNullValues(ticket_1); // No warning
+        AnnotaionProcessor.checkNullValues(ticketFullConstructor); // No warning
 
     }
 

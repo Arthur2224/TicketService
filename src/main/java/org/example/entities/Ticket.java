@@ -6,13 +6,14 @@ import org.example.annotations.Nullable;
 import org.example.interfaces.Printable;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Random;
 
 public class Ticket implements Identifiable, Printable {
     @Nullable(key = "ID must not be NULL")
     private Integer id; // switched to Integer because of default value of this type is Null for annotation task
-    private long time;
+    private LocalDateTime creationDateTime;
     private String concertHall;
     private int eventCode;
     private boolean isPromo;
@@ -22,13 +23,13 @@ public class Ticket implements Identifiable, Printable {
 
     public Ticket() {
         //setId(); just for checking how ID annotation works
-        setTime();
+        setDateTime();
     }
 
     public Ticket(String concertHall, int eventCode) {
         setId(); // generate id
         setConcertHall(concertHall);
-        setTime();
+        setDateTime();
         this.eventCode = eventCode;
 
     }
@@ -37,19 +38,17 @@ public class Ticket implements Identifiable, Printable {
         setId();
         setConcertHall(concertHall);
         setEventCode(eventCode);
-        setTime();
+        setDateTime();
         this.isPromo = isPromo;
         this.stadiumSector = stadiumSector;
         this.maxBackpackWeight = maxBackpackWeight;
         setPrice(price);
     }
 
-    public long getTime() {
-        return time;
-    }
 
-    public void setTime() {
-       this.time= getCreationTime();
+
+    public void setDateTime() {
+       this.creationDateTime = getCreationDateTime();
     }
     public void setStadiumSector(StadiumSectors stadiumSector){
         this.stadiumSector=stadiumSector;
@@ -58,8 +57,8 @@ public class Ticket implements Identifiable, Printable {
     public StadiumSectors getStadiumSector() {
         return stadiumSector;
     }
-    private long getCreationTime() { // method that provides detection and saves the time of creation
-        return System.currentTimeMillis(); // Unix timestamp
+    private LocalDateTime getCreationDateTime() { // method that provides detection and saves the time of creation
+        return LocalDateTime.now(); // Unix timestamp
     }
 
     public void setPrice(BigDecimal price) { // setter for price
@@ -103,7 +102,7 @@ public class Ticket implements Identifiable, Printable {
                 "id=" + id +
                 ", concertHall='" + concertHall + '\'' +
                 ", eventCode=" + eventCode +
-                ", time=" + new Date(time) + // convert a time from unix to more readable format
+                ", time=" + creationDateTime + // convert a time from unix to more readable format
                 ", isPromo=" + isPromo +
                 ", stadiumSector=" + stadiumSector +
                 ", maxBackpackWeight=" + maxBackpackWeight +
@@ -116,8 +115,12 @@ public class Ticket implements Identifiable, Printable {
     }
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
+        if (this == obj) {
+            return true; // by reference at the same part of memory
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
         Ticket ticket = (Ticket) obj;
         return getId() == ticket.getId();
     }
