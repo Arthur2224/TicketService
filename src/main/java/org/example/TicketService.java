@@ -3,7 +3,7 @@ package org.example;
 import org.example.annotations.AnnotaionProcessor;
 import org.example.entities.*;
 import org.example.enums.StadiumSectors;
-import org.example.utilities.TicketUtility;
+import org.example.utilities.TicketManager;
 
 import java.math.BigDecimal;
 

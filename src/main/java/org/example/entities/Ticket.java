@@ -1,18 +1,16 @@
 package org.example.entities;
 
 import org.example.enums.StadiumSectors;
-import org.example.interfaces.Identifiable;
+import org.example.abstracts.IdentifiableEntity;
 import org.example.annotations.Nullable;
 import org.example.interfaces.Printable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Random;
 
-public class Ticket implements Identifiable, Printable {
-    @Nullable(key = "ID must not be NULL")
-    private Integer id; // switched to Integer because of default value of this type is Null for annotation task
+public class Ticket extends IdentifiableEntity implements Printable {
+
     private LocalDateTime creationDateTime;
     private String concertHall;
     private int eventCode;
@@ -27,7 +25,7 @@ public class Ticket implements Identifiable, Printable {
     }
 
     public Ticket(String concertHall, int eventCode) {
-        setId(); // generate id
+        super.setId(); // generate id
         setConcertHall(concertHall);
         setDateTime();
         this.eventCode = eventCode;
@@ -46,17 +44,18 @@ public class Ticket implements Identifiable, Printable {
     }
 
 
-
     public void setDateTime() {
-       this.creationDateTime = getCreationDateTime();
+        this.creationDateTime = getCreationDateTime();
     }
-    public void setStadiumSector(StadiumSectors stadiumSector){
-        this.stadiumSector=stadiumSector;
+
+    public void setStadiumSector(StadiumSectors stadiumSector) {
+        this.stadiumSector = stadiumSector;
     }
 
     public StadiumSectors getStadiumSector() {
         return stadiumSector;
     }
+
     private LocalDateTime getCreationDateTime() { // method that provides detection and saves the time of creation
         return LocalDateTime.now(); // Unix timestamp
     }
@@ -82,24 +81,11 @@ public class Ticket implements Identifiable, Printable {
             this.eventCode = eventCode;
     }
 
-    public int getId() {
-        return this.id;
-    }
-
-    @Override
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    private void setId() {
-        Random random = new Random();
-        this.id = random.nextInt(8999) + 1000; // Generates a 4-digit number from 1000 to 9999
-    }
 
     @Override
     public String toString() {
         return "Ticket{" +
-                "id=" + id +
+                "id=" + super.id +
                 ", concertHall='" + concertHall + '\'' +
                 ", eventCode=" + eventCode +
                 ", time=" + creationDateTime + // convert a time from unix to more readable format
@@ -109,10 +95,12 @@ public class Ticket implements Identifiable, Printable {
                 ", price=" + price +
                 '}';
     }
+
     @Override
-    public void print(){
+    public void print() {
         System.out.println(this.toString());
     }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -122,7 +110,7 @@ public class Ticket implements Identifiable, Printable {
             return false;
         }
         Ticket ticket = (Ticket) obj;
-        return getId() == ticket.getId();
+        return super.getId() == ticket.getId();
     }
 
     @Override

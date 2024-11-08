@@ -6,7 +6,7 @@ import org.example.enums.StadiumSectors;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TicketUtility {
+public class TicketManager {
 
   private final List<Ticket> tickets = new ArrayList<>();
 
