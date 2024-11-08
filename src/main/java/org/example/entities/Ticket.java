@@ -1,13 +1,17 @@
-package org.example;
+package org.example.entities;
 
+import org.example.enums.StadiumSectors;
+import org.example.abstracts.IdentifiableEntity;
+import org.example.annotations.Nullable;
+import org.example.interfaces.Printable;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Random;
 
-public class Ticket {
-    private final long time; // variable doesn't need to be changed
-    private String id;
+public class Ticket extends IdentifiableEntity implements Printable {
+
+    private LocalDateTime creationDateTime;
     private String concertHall;
     private int eventCode;
     private boolean isPromo;
@@ -16,22 +20,23 @@ public class Ticket {
     private BigDecimal price = BigDecimal.valueOf(0.0);
 
     public Ticket() {
-        setId();
-        this.time = getCreationTime();
+        //setId(); just for checking how ID annotation works
+        setDateTime();
     }
 
     public Ticket(String concertHall, int eventCode) {
-        setId(); // generate id
+        super.setId(); // generate id
         setConcertHall(concertHall);
+        setDateTime();
         this.eventCode = eventCode;
-        this.time = getCreationTime();
+
     }
 
     public Ticket(String concertHall, int eventCode, boolean isPromo, StadiumSectors stadiumSector, double maxBackpackWeight, BigDecimal price) {
         setId();
         setConcertHall(concertHall);
         setEventCode(eventCode);
-        this.time = getCreationTime();
+        setDateTime();
         this.isPromo = isPromo;
         this.stadiumSector = stadiumSector;
         this.maxBackpackWeight = maxBackpackWeight;
@@ -39,20 +44,27 @@ public class Ticket {
     }
 
 
+    public void setDateTime() {
+        this.creationDateTime = getCreationDateTime();
+    }
 
-    private long getCreationTime() { // method that's provides detection and saves the time of creation
-        return System.currentTimeMillis(); // Unix timestamp
+    public void setStadiumSector(StadiumSectors stadiumSector) {
+        this.stadiumSector = stadiumSector;
     }
 
     public StadiumSectors getStadiumSector() {
         return stadiumSector;
     }
 
+    private LocalDateTime getCreationDateTime() { // method that provides detection and saves the time of creation
+        return LocalDateTime.now(); // Unix timestamp
+    }
+
     public void setPrice(BigDecimal price) { // setter for price
         if (price.compareTo(BigDecimal.ZERO) > 0)
             this.price = price;
         else
-            throw new IllegalArgumentException("price can not be negative");
+            throw new IllegalArgumentException("Price cannot be negative");
     }
 
     public void setConcertHall(String concertHall) { // Setter for concertHall
@@ -69,39 +81,40 @@ public class Ticket {
             this.eventCode = eventCode;
     }
 
-    public String getId(){
-        return this.id;
-    }
-    private void setId() {
-        if (this.id == null) {
-            this.id = ""; // initialize id
-            Random random = new Random();
-            int length = random.nextInt(3) + 2; // length from 2 to 4 (1 is too small)
-
-            for (int i = 0; i < length; i++) {
-                int charOrInt = random.nextInt(2); // 0 for char, 1 for int
-
-                if (charOrInt == 0) {
-                    this.id += (char) (random.nextInt(26) + 65); // A-Z unicode
-                } else { // generate a int
-                    this.id += random.nextInt(10); // 0-9
-                }
-            }
-
-        }
-    }
 
     @Override
     public String toString() {
         return "Ticket{" +
-                "id='" + id + '\'' +
+                "id=" + super.id +
                 ", concertHall='" + concertHall + '\'' +
                 ", eventCode=" + eventCode +
-                ", time=" + new Date(time) + // convert a time from unix to more readable format
+                ", time=" + creationDateTime + // convert a time from unix to more readable format
                 ", isPromo=" + isPromo +
                 ", stadiumSector=" + stadiumSector +
                 ", maxBackpackWeight=" + maxBackpackWeight +
                 ", price=" + price +
                 '}';
+    }
+
+    @Override
+    public void print() {
+        System.out.println(this.toString());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true; // by reference at the same part of memory
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Ticket ticket = (Ticket) obj;
+        return super.getId() == ticket.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(getId());
     }
 }
