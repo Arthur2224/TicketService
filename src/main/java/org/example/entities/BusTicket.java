@@ -1,20 +1,20 @@
 package org.example.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import org.example.enums.TicketClasses;
-import org.example.enums.TicketTypes;
 
-import java.time.LocalDate;
-
+/**
+ * Represents a bus ticket with details like ticket class, type, start date, and price.
+ * This class is used to map bus ticket data from JSON and handle it within the application.
+ *
+ */
 public class BusTicket {
 
     @JsonProperty("ticketClass")
     private TicketClasses ticketClass;
 
     @JsonProperty("ticketType")
-    private TicketTypes ticketType;
+    private String ticketType;
 
     @JsonProperty("startDate")
     private String startDate;
@@ -22,7 +22,7 @@ public class BusTicket {
     @JsonProperty("price")
     private int price;
 
-    // Getteri un setteri
+
     public TicketClasses getTicketClass() {
         return ticketClass;
     }
@@ -31,11 +31,11 @@ public class BusTicket {
         this.ticketClass = ticketClass;
     }
 
-    public TicketTypes getTicketType() {
+    public String getTicketType() {
         return ticketType;
     }
 
-    public void setTicketType(TicketTypes ticketType) {
+    public void setTicketType(String ticketType) {
         this.ticketType = ticketType;
     }
 

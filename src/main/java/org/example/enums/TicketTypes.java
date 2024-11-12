@@ -4,5 +4,5 @@ public enum TicketTypes {
     DAY,
     MONTH,
     YEAR,
-    PRIME
+    WEEK
 }
