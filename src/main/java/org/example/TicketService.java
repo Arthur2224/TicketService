@@ -1,6 +1,7 @@
 package org.example;
 
 import org.example.custom_collections.CustomArrayList;
+import org.example.custom_collections.CustomHashSet;
 import org.example.entities.Ticket;
 
 public class TicketService {
@@ -34,6 +35,26 @@ public class TicketService {
             System.out.println(ticket);
 
         }
+
+        CustomHashSet<String> set = new CustomHashSet<>();
+
+        set.add("Cat");
+        set.add("Dog");
+        set.add("Frog");
+
+        boolean addedDuplicate = set.add("Cat");
+        System.out.println("Tried to add duplicate 'Cat': " + addedDuplicate);
+
+        System.out.println("Set contains 'Cat': " + set.contains("Cat"));
+        System.out.println("Set contains 'DOG': " + set.contains("DOG"));
+
+        boolean removed = set.remove("Frog");
+        System.out.println("Removed 'Frog': " + removed);
+
+        System.out.println("Elements in set:");
+        set.iterate();
+
+        System.out.println("Size of set: " + set.size());
 
     }
 
