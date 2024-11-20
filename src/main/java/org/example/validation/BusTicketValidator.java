@@ -1,7 +1,7 @@
 package org.example.validation;
 
-import org.example.enums.TicketClasses;
 import org.example.enums.TicketTypes;
+import org.example.exceptions.InvalidPriceException;
 
 import java.time.LocalDate;
 
@@ -34,11 +34,14 @@ public class BusTicketValidator {
     }
 
 
-    public static boolean isPriceValid(Integer price) {
+    public static boolean isPriceValid(Integer price) throws InvalidPriceException {
         if (price == null || price <= 0) {
-            return false;
+            throw new InvalidPriceException("Price cannot be null or zero or negative");
         }
-        return price % 2 == 0;
+        if (price % 2 != 0) {
+            throw new InvalidPriceException("Ticket price must be an even number");
+        }
+        return true;
     }
 
 }
