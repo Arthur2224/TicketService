@@ -20,12 +20,8 @@ public class BusTicketValidator {
         if (ticketType == null || ticketType.isEmpty()) {
             return false;
         }
-
         try {
-
             TicketTypes type = TicketTypes.valueOf(ticketType);
-
-
             return true;
         } catch (IllegalArgumentException e) {
             // If the value is invalid (not a valid enum constant), return false
