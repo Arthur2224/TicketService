@@ -60,9 +60,10 @@ public class ClientManager {
                     System.out.println("ID: " + client.getId() + ", Name: " + client.getName() + ", Email: " + client.getEmail())
             );
         }
+        System.out.println("\n");
     }
 
-    private Client findClientByEmail(List<Client> clients, String email) {
+    public Client findClientByEmail(List<Client> clients, String email) {
         return clients.stream()
                 .filter(client -> client.getEmail().equals(email))
                 .findFirst()
@@ -70,6 +71,16 @@ public class ClientManager {
     }
 
     private Client findClientById(List<Client> clients, long id) {
+        return clients.stream()
+                .filter(client -> client.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
+    public Client findClientById(long id) {
+        List<Client> clients = clientService.getAllClients();
+        if (clients.isEmpty()) {
+            System.out.println("No client found.");
+        }
         return clients.stream()
                 .filter(client -> client.getId().equals(id))
                 .findFirst()

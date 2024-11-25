@@ -96,6 +96,8 @@ public class ClientDAO implements DAO<Client> {
     }
 
     public void delete(Client client) {
+        TicketDAO ticketDAO=new TicketDAO();
+        ticketDAO.deleteTicketsByClientId(client.getId());
         String sql = "DELETE FROM clients WHERE id = ?";
         long id = client.getId();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -108,4 +110,6 @@ public class ClientDAO implements DAO<Client> {
             throw new DAOException("Failed to delete client by ID: " + id, e);
         }
     }
+
+
 }
