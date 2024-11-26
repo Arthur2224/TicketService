@@ -23,25 +23,20 @@ public class TicketServiceApp {
 
         System.out.println("Current clients:");
         clientManager.printAllClients();
-        Client testClient = new Client("Arthur", "arthur1@gmail.com");
+        Client testClient = new Client("Arthur", "arthur23@gmail.com");
 
-        // Delete by id
         clientManager.deleteClientById(10L);
 
-        // Delete by email client if exists
-        clientManager.deleteClientByEmail(testClient.getEmail());
-        System.out.println("Clients after delete by id and email:");
-        clientManager.printAllClients();
-
-        // Insert new client to DB
         clientManager.addClient(testClient);
 
         System.out.println("Clients after adding new client:");
         clientManager.printAllClients();
 
-        // Update the clients email
-        clientManager.updateClientEmail(1L, "arthur0@gmail.com");
+        clientManager.deleteClientByEmail("sofia.rossi@example.com");
+        System.out.println("Clients after delete by id and email:");
+        clientManager.printAllClients();
 
+        clientManager.updateClientEmail(1L, "arthur0@gmail.com");
         System.out.println("Clients after updating clients email:");
         clientManager.printAllClients();
 
@@ -57,26 +52,16 @@ public class TicketServiceApp {
                 BigDecimal.valueOf(21.5),
                 clientManager.findClientById(3L)
         );
-
-        // Add new ticket to DB
         ticketManager.addTicket(testTicket);
-
-        // Print all tickets after adding new ticket
         System.out.println("Tickets after adding new ticket:");
         ticketManager.printAllTickets();
 
-        // Update ticket's concert hall
         testTicket.setEventCode(125);
         ticketManager.updateTicket(testTicket.getId(),testTicket );
-
-        // Print all tickets after updating
         System.out.println("Tickets after updating ticket:");
         ticketManager.printAllTickets();
 
-        // Delete ticket by ID
         ticketManager.deleteTicketById(testTicket.getId());
-
-        // Print all tickets after deleting
         System.out.println("Tickets after deleting ticket:");
         ticketManager.printAllTickets();
     }
