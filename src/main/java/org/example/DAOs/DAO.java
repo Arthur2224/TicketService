@@ -1,12 +1,11 @@
 package org.example.DAOs;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface DAO<T> {
-    Optional<T> findById(long id);
+    T findById(Long id);
     List<T> getAll();
     void save(T t);
-    void update(T t, T temp);
-    void delete(T t);
+    void update(Long id,T t);
+    void delete(Long id);
 }

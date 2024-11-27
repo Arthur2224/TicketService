@@ -13,11 +13,11 @@ import java.util.Random;
 @NoArgsConstructor
 public abstract class IdentifiableEntity {
     @Nullable(key = "ID must not be NULL")
-    protected long id;
+    protected Long id;
 
     public void setId() {
         long timestamp = System.currentTimeMillis();
         int randomValue = new Random().nextInt(1000);
-        id = Long.parseLong(timestamp + String.format("%03d", randomValue));
+        this.id = Long.parseLong(timestamp + String.format("%03d", randomValue));
     }
 }

@@ -22,7 +22,6 @@ public class Ticket extends IdentifiableEntity implements Printable {
     private BigDecimal price = BigDecimal.valueOf(0.0);
 
     public Ticket() {
-        super.setId();
     }
 
     public Ticket(String concertHall, int eventCode) {

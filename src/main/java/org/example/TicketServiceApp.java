@@ -5,8 +5,6 @@ import org.example.DAOs.TicketDAO;
 import org.example.entities.Client;
 import org.example.entities.Ticket;
 import org.example.enums.StadiumSectors;
-import org.example.managers.ClientManager;
-import org.example.managers.TicketManager;
 import org.example.services.ClientService;
 import org.example.services.TicketService;
 
@@ -14,55 +12,44 @@ import java.math.BigDecimal;
 
 public class TicketServiceApp {
     public static void main(String[] args) {
-
         ClientService clientService = new ClientService(new ClientDAO());
-        ClientManager clientManager = new ClientManager(clientService);
-
-        TicketService ticketService= new TicketService(new TicketDAO());
-        TicketManager ticketManager = new TicketManager(ticketService);
+        TicketService ticketService = new TicketService(new TicketDAO());
 
         System.out.println("Current clients:");
-        clientManager.printAllClients();
-        Client testClient = new Client("Arthur", "arthur23@gmail.com");
+        clientService.printAllClients();
 
-        clientManager.deleteClientById(10L);
-
-        clientManager.addClient(testClient);
-
+        Client testClient = new Client("Arthur", "arthur1332@gmail.com");
+        clientService.addClient(testClient);
         System.out.println("Clients after adding new client:");
-        clientManager.printAllClients();
+        clientService.printAllClients();
 
-        clientManager.deleteClientByEmail("sofia.rossi@example.com");
-        System.out.println("Clients after delete by id and email:");
-        clientManager.printAllClients();
+        clientService.deleteClient(14L);
+        System.out.println("Clients after removing by id:");
+        clientService.printAllClients();
 
-        clientManager.updateClientEmail(1L, "arthur0@gmail.com");
+        testClient.setName("name also has been updated");
+        testClient.setEmail("updated email");
+        clientService.updateClient(10L, testClient);
+
         System.out.println("Clients after updating clients email:");
-        clientManager.printAllClients();
+        clientService.printAllClients();
 
         System.out.println("Current tickets:");
-        ticketManager.printAllTickets();
+        ticketService.printAllTickets();
 
-        Ticket testTicket = new Ticket(
-                "Hall B",
-                124,
-                true,
-                StadiumSectors.C,
-                10.0,
-                BigDecimal.valueOf(21.5),
-                clientManager.findClientById(3L)
-        );
-        ticketManager.addTicket(testTicket);
+        Ticket testTicket = new Ticket("Match A", 101, true, StadiumSectors.C, 22.5, BigDecimal.valueOf(50.0), clientService.getClientById(15L));
+        ticketService.addTicket(testTicket);
         System.out.println("Tickets after adding new ticket:");
-        ticketManager.printAllTickets();
+        ticketService.printAllTickets();
 
-        testTicket.setEventCode(125);
-        ticketManager.updateTicket(testTicket.getId(),testTicket );
-        System.out.println("Tickets after updating ticket:");
-        ticketManager.printAllTickets();
+        ticketService.delete(12L);
+        System.out.println("Tickets after removing by id:");
+        ticketService.printAllTickets();
 
-        ticketManager.deleteTicketById(testTicket.getId());
-        System.out.println("Tickets after deleting ticket:");
-        ticketManager.printAllTickets();
+        testTicket.setConcertHall("New");
+        testTicket.setPrice(BigDecimal.valueOf(75.0));
+        ticketService.updateTicket(13L, testTicket);
+        ticketService.getTicketById(13L).print();
+
     }
 }
