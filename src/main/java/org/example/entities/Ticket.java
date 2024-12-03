@@ -1,17 +1,19 @@
 package org.example.entities;
 
-import org.example.enums.StadiumSectors;
+import lombok.Data;
+import lombok.experimental.SuperBuilder;
 import org.example.abstracts.IdentifiableEntity;
-import org.example.annotations.Nullable;
+import org.example.enums.StadiumSectors;
 import org.example.interfaces.Printable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Random;
 
+@Data
+@SuperBuilder
 public class Ticket extends IdentifiableEntity implements Printable {
-
-    private LocalDateTime creationDateTime;
+    private final LocalDateTime creationDateTime = LocalDateTime.now();
+    private Client client;
     private String concertHall;
     private int eventCode;
     private boolean isPromo;
@@ -20,75 +22,63 @@ public class Ticket extends IdentifiableEntity implements Printable {
     private BigDecimal price = BigDecimal.valueOf(0.0);
 
     public Ticket() {
-        //setId(); just for checking how ID annotation works
-        setDateTime();
     }
 
     public Ticket(String concertHall, int eventCode) {
-        super.setId(); // generate id
+        super.setId();
         setConcertHall(concertHall);
-        setDateTime();
-        this.eventCode = eventCode;
-
+        setEventCode(eventCode);
     }
 
     public Ticket(String concertHall, int eventCode, boolean isPromo, StadiumSectors stadiumSector, double maxBackpackWeight, BigDecimal price) {
-        setId();
+        super.setId();
         setConcertHall(concertHall);
         setEventCode(eventCode);
-        setDateTime();
         this.isPromo = isPromo;
         this.stadiumSector = stadiumSector;
         this.maxBackpackWeight = maxBackpackWeight;
         setPrice(price);
     }
 
-
-    public void setDateTime() {
-        this.creationDateTime = getCreationDateTime();
-    }
-
-    public void setStadiumSector(StadiumSectors stadiumSector) {
+    public Ticket(String concertHall, int eventCode, boolean isPromo, StadiumSectors stadiumSector, double maxBackpackWeight, BigDecimal price, Client client) {
+        super.setId();
+        setConcertHall(concertHall);
+        setEventCode(eventCode);
+        this.isPromo = isPromo;
         this.stadiumSector = stadiumSector;
+        this.maxBackpackWeight = maxBackpackWeight;
+        setPrice(price);
+        this.client = client;
     }
 
-    public StadiumSectors getStadiumSector() {
-        return stadiumSector;
+    public void setConcertHall(String concertHall) {
+        if (concertHall == null || concertHall.length() > 10) {
+            throw new IllegalArgumentException("Concert hall name length cannot exceed 10 characters");
+        }
+        this.concertHall = concertHall;
     }
 
-    private LocalDateTime getCreationDateTime() { // method that provides detection and saves the time of creation
-        return LocalDateTime.now(); // Unix timestamp
-    }
-
-    public void setPrice(BigDecimal price) { // setter for price
-        if (price.compareTo(BigDecimal.ZERO) > 0)
-            this.price = price;
-        else
-            throw new IllegalArgumentException("Price cannot be negative");
-    }
-
-    public void setConcertHall(String concertHall) { // Setter for concertHall
-        if (concertHall.length() > 10)
-            throw new IllegalArgumentException("ConcertHall name length is too long, max length is 10 chars");
-        else
-            this.concertHall = concertHall;
-    }
-
-    public void setEventCode(int eventCode) { // Setter for eventCode
-        if (eventCode < 100 || eventCode > 999)
+    public void setEventCode(int eventCode) {
+        if (eventCode < 100 || eventCode > 999) {
             throw new IllegalArgumentException("The event code doesn't have the right format");
-        else
-            this.eventCode = eventCode;
+        }
+        this.eventCode = eventCode;
     }
 
+    public void setPrice(BigDecimal price) {
+        if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Price must be greater than 0");
+        }
+        this.price = price;
+    }
 
     @Override
     public String toString() {
         return "Ticket{" +
-                "id=" + super.id +
+                "id=" + super.getId() +
                 ", concertHall='" + concertHall + '\'' +
                 ", eventCode=" + eventCode +
-                ", time=" + creationDateTime + // convert a time from unix to more readable format
+                ", time=" + creationDateTime +
                 ", isPromo=" + isPromo +
                 ", stadiumSector=" + stadiumSector +
                 ", maxBackpackWeight=" + maxBackpackWeight +
@@ -104,7 +94,7 @@ public class Ticket extends IdentifiableEntity implements Printable {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
-            return true; // by reference at the same part of memory
+            return true;
         }
         if (obj == null || getClass() != obj.getClass()) {
             return false;
@@ -115,6 +105,6 @@ public class Ticket extends IdentifiableEntity implements Printable {
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(getId());
+        return Long.hashCode(getId());
     }
 }

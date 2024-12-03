@@ -1,21 +1,23 @@
 package org.example.abstracts;
 
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.example.annotations.Nullable;
 
 import java.util.Random;
 
+@SuperBuilder
+@Getter
+@NoArgsConstructor
 public abstract class IdentifiableEntity {
     @Nullable(key = "ID must not be NULL")
-    protected Integer id;
-
-    public int getId() {
-        return this.id;
-    }
+    protected Long id;
 
     public void setId() {
-        Random random = new Random();
-        this.id = random.nextInt(8999) + 1000;
+        long timestamp = System.currentTimeMillis();
+        int randomValue = new Random().nextInt(1000);
+        this.id = Long.parseLong(timestamp + String.format("%03d", randomValue));
     }
-
-    ;
 }
