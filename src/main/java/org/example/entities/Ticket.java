@@ -1,37 +1,56 @@
 package org.example.entities;
 
+import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.example.abstracts.IdentifiableEntity;
 import org.example.enums.StadiumSectors;
-import org.example.interfaces.Printable;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
 @SuperBuilder
-public class Ticket extends IdentifiableEntity implements Printable {
-    private final LocalDateTime creationDateTime = LocalDateTime.now();
-    private Client client;
-    private String concertHall;
-    private int eventCode;
-    private boolean isPromo;
-    private StadiumSectors stadiumSector;
-    private double maxBackpackWeight;
-    private BigDecimal price = BigDecimal.valueOf(0.0);
+@NoArgsConstructor
+@Entity
+@Table(name = "tickets")
+public class Ticket {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public Ticket() {
-    }
+    @Column(name = "creation_date_time")
+    private final LocalDateTime creationDateTime = LocalDateTime.now();
+
+    @ManyToOne
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
+    @Column(name = "concert_hall", nullable = false, length = 10)
+    private String concertHall;
+
+    @Column(name = "event_code", nullable = false)
+    private int eventCode;
+
+    @Column(name = "is_promo", nullable = false)
+    private boolean isPromo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "stadium_sector", nullable = false)
+    private StadiumSectors stadiumSector;
+
+    @Column(name = "max_backpack_weight", nullable = false)
+    private double maxBackpackWeight;
+
+    @Column(name = "price", nullable = false)
+    private BigDecimal price;
 
     public Ticket(String concertHall, int eventCode) {
-        super.setId();
         setConcertHall(concertHall);
         setEventCode(eventCode);
     }
 
     public Ticket(String concertHall, int eventCode, boolean isPromo, StadiumSectors stadiumSector, double maxBackpackWeight, BigDecimal price) {
-        super.setId();
         setConcertHall(concertHall);
         setEventCode(eventCode);
         this.isPromo = isPromo;
@@ -41,7 +60,6 @@ public class Ticket extends IdentifiableEntity implements Printable {
     }
 
     public Ticket(String concertHall, int eventCode, boolean isPromo, StadiumSectors stadiumSector, double maxBackpackWeight, BigDecimal price, Client client) {
-        super.setId();
         setConcertHall(concertHall);
         setEventCode(eventCode);
         this.isPromo = isPromo;
@@ -75,36 +93,15 @@ public class Ticket extends IdentifiableEntity implements Printable {
     @Override
     public String toString() {
         return "Ticket{" +
-                "id=" + super.getId() +
+                "id=" + id +
                 ", concertHall='" + concertHall + '\'' +
                 ", eventCode=" + eventCode +
-                ", time=" + creationDateTime +
+                ", creationDateTime=" + creationDateTime +
                 ", isPromo=" + isPromo +
                 ", stadiumSector=" + stadiumSector +
                 ", maxBackpackWeight=" + maxBackpackWeight +
                 ", price=" + price +
+                ", client name=" + client.getName() +
                 '}';
-    }
-
-    @Override
-    public void print() {
-        System.out.println(this.toString());
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null || getClass() != obj.getClass()) {
-            return false;
-        }
-        Ticket ticket = (Ticket) obj;
-        return super.getId() == ticket.getId();
-    }
-
-    @Override
-    public int hashCode() {
-        return Long.hashCode(getId());
     }
 }

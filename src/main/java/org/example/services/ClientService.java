@@ -33,9 +33,9 @@ public class ClientService {
         return client;
     }
 
-    public void updateClient(Long id, Client clientDetails) {
-        clientDAO.update(id, clientDetails);
-        System.out.println("Updated client with id: " + id + ")");
+    public void updateClient( Client clientDetails) {
+        clientDAO.update(clientDetails);
+        System.out.println("Updated client with id: " + clientDetails.getId() + ")");
     }
 
     public void deleteClient(long id) {

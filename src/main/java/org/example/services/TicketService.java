@@ -33,9 +33,9 @@ public class TicketService {
         return ticket;
     }
 
-    public void updateTicket(Long id, Ticket ticketDetails) {
-        ticketDAO.update(id, ticketDetails);
-        System.out.println("Updating ticket with ID: " + id);
+    public void updateTicket(Ticket ticketDetails) {
+        ticketDAO.update(ticketDetails);
+        System.out.println("Updating ticket with ID: " + ticketDetails.getId());
     }
 
     public void delete(long id) {
