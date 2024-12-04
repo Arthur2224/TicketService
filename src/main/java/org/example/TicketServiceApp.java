@@ -1,19 +1,21 @@
 package org.example;
 
-import org.example.DAOs.ClientDAO;
-import org.example.DAOs.TicketDAO;
 import org.example.entities.Client;
 import org.example.entities.Ticket;
 import org.example.enums.StadiumSectors;
 import org.example.services.ClientService;
 import org.example.services.TicketService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.math.BigDecimal;
 
 public class TicketServiceApp {
     public static void main(String[] args) {
-        ClientService clientService = new ClientService(new ClientDAO());
-        TicketService ticketService = new TicketService(new TicketDAO());
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+        ClientService clientService = context.getBean(ClientService.class);
+        TicketService ticketService = context.getBean(TicketService.class);
 
         System.out.println("Current clients:");
         clientService.printAllClients();
@@ -24,14 +26,13 @@ public class TicketServiceApp {
         clientService.printAllClients();
 
         clientService.deleteClient(14L);
-        System.out.println("Clients after removing by id:");
+        System.out.println("Clients after removing by ID:");
         clientService.printAllClients();
 
-        testClient.setName("name also has been updated");
-        testClient.setEmail("updated email");
+        testClient.setName("Updated Name");
+        testClient.setEmail("updated_email@gmail.com");
         clientService.updateClient(10L, testClient);
-
-        System.out.println("Clients after updating clients email:");
+        System.out.println("Clients after updating client email:");
         clientService.printAllClients();
 
         System.out.println("Current tickets:");
@@ -43,13 +44,12 @@ public class TicketServiceApp {
         ticketService.printAllTickets();
 
         ticketService.delete(12L);
-        System.out.println("Tickets after removing by id:");
+        System.out.println("Tickets after removing by ID:");
         ticketService.printAllTickets();
 
-        testTicket.setConcertHall("New");
+        testTicket.setConcertHall("New Hall");
         testTicket.setPrice(BigDecimal.valueOf(75.0));
         ticketService.updateTicket(13L, testTicket);
-        ticketService.getTicketById(13L).print();
-
+        ticketService.getTicketById(13L).toString();
     }
 }

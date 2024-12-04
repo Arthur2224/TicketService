@@ -1,6 +1,7 @@
 package org.example.mappers;
 
 import org.example.entities.Client;
+import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+@Component
 public class ClientMapper {
     public Client mapToClient(ResultSet resultSet) throws SQLException {
         return Client.builder()
@@ -17,7 +19,6 @@ public class ClientMapper {
                 .createdAt(resultSet.getTimestamp("created_at").toLocalDateTime())
                 .updatedAt(resultSet.getTimestamp("updated_at").toLocalDateTime())
                 .build();
-
     }
 
     public PreparedStatement mapToPreparedStatement(PreparedStatement statement, Client client) throws SQLException {
