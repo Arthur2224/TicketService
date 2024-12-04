@@ -18,7 +18,7 @@ import java.util.List;
 public class ClientDAO implements DAO<Client> {
     private final DataSource dataSource;
     private final TicketDAO ticketDAO;
-    private final ClientMapper clientMapper;  // Assuming you have a ClientMapper for mapping
+    private final ClientMapper clientMapper;
 
     @Autowired
     public ClientDAO(DataSource dataSource, TicketDAO ticketDAO, ClientMapper clientMapper) {
@@ -63,7 +63,6 @@ public class ClientDAO implements DAO<Client> {
         }
         return clients;
     }
-
 
     @Override
     public void save(Client client) {

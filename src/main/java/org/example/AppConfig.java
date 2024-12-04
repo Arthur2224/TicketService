@@ -10,7 +10,6 @@ import javax.sql.DataSource;
 @Configuration
 @ComponentScan
 public class AppConfig {
-
     @Bean
     public DataSource dataSource() {
         BasicDataSource dataSource = new BasicDataSource();
