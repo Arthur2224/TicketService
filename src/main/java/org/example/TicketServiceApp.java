@@ -1,55 +1,32 @@
 package org.example;
 
 import org.example.entities.Client;
-import org.example.entities.Ticket;
-import org.example.enums.StadiumSectors;
 import org.example.services.ClientService;
 import org.example.services.TicketService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.math.BigDecimal;
-
 public class TicketServiceApp {
+
     public static void main(String[] args) {
         ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
         ClientService clientService = context.getBean(ClientService.class);
         TicketService ticketService = context.getBean(TicketService.class);
 
-        System.out.println("Current clients:");
         clientService.printAllClients();
-
-        Client testClient = new Client("Arthur", "arthur1332@gmail.com");
-        clientService.addClient(testClient);
-        System.out.println("Clients after adding new client:");
+        Client newClient = Client.builder()
+                .name("Arthur")
+                .email("arthur@gmail.com")
+                .build();
+        clientService.addClient(newClient);
+        clientService.activateClient(newClient);
+        newClient.setName("ArThUR");
+        clientService.updateClient(newClient);
         clientService.printAllClients();
-
-        clientService.deleteClient(14L);
-        System.out.println("Clients after removing by ID:");
+        clientService.deleteClient(newClient.getId());
         clientService.printAllClients();
+        ticketService.loadTickets().stream().forEach(ticket -> System.out.println(ticket));
 
-        testClient.setName("Updated Name");
-        testClient.setEmail("updated_email@gmail.com");
-        clientService.updateClient(10L, testClient);
-        System.out.println("Clients after updating client email:");
-        clientService.printAllClients();
-
-        System.out.println("Current tickets:");
-        ticketService.printAllTickets();
-
-        Ticket testTicket = new Ticket("Match A", 101, true, StadiumSectors.C, 22.5, BigDecimal.valueOf(50.0), clientService.getClientById(15L));
-        ticketService.addTicket(testTicket);
-        System.out.println("Tickets after adding new ticket:");
-        ticketService.printAllTickets();
-
-        ticketService.delete(12L);
-        System.out.println("Tickets after removing by ID:");
-        ticketService.printAllTickets();
-
-        testTicket.setConcertHall("New Hall");
-        testTicket.setPrice(BigDecimal.valueOf(75.0));
-        ticketService.updateTicket(13L, testTicket);
-        ticketService.getTicketById(13L).toString();
     }
 }

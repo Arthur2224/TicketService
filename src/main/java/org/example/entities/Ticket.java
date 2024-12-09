@@ -1,5 +1,6 @@
 package org.example.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @Entity
 @Table(name = "tickets")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Ticket extends IdentifiableEntity {
     @Column(name = "creation_datetime", nullable = false, updatable = false)
     private final LocalDateTime creationDateTime = LocalDateTime.now();

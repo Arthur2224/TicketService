@@ -1,0 +1,47 @@
+[
+  {
+    "id": 1,
+    "creationDateTime": "2024-12-09T10:30:00",
+    "client": {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john.doe@example.com"
+    },
+    "concertHall": "Arena",
+    "eventCode": 101,
+    "isPromo": true,
+    "stadiumSector": "C",
+    "maxBackpackWeight": 5.0,
+    "price": 150.00
+  },
+  {
+    "id": 2,
+    "creationDateTime": "2024-12-09T11:45:00",
+    "client": {
+      "id": 2,
+      "name": "Jane Smith",
+      "email": "jane.smith@example.com"
+    },
+    "concertHall": "Stadium",
+    "eventCode": 202,
+    "isPromo": false,
+    "stadiumSector": "C",
+    "maxBackpackWeight": 10.0,
+    "price": 75.00
+  },
+  {
+    "id": 3,
+    "creationDateTime": "2024-12-09T12:00:00",
+    "client": {
+      "id": 3,
+      "name": "Alice Johnson",
+      "email": "alice.johnson@example.com"
+    },
+    "concertHall": "Theater",
+    "eventCode": 303,
+    "isPromo": false,
+    "stadiumSector": "C",
+    "maxBackpackWeight": 8.0,
+    "price": 120.50
+  }
+]

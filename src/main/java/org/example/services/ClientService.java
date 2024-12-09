@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +33,7 @@ public class ClientService {
         return clients;
     }
 
+    @Transactional
     public Client getClientById(Long id) {
         Client client = clientDAO.findById(id);
         if (client != null) {
@@ -43,15 +45,21 @@ public class ClientService {
     }
 
     @Transactional
-    public void updateClient(Long id, Client clientDetails) {
-        clientDAO.update(id, clientDetails);
-        logger.info("Updated client with id: {}", id);
+    public void updateClient(Client clientDetails) {
+        clientDAO.update(clientDetails);
+        logger.info("Updated client with id: {}", clientDetails.getId());
     }
 
     @Transactional
     public void deleteClient(Long id) {
         clientDAO.delete(id);
         logger.info("Deleted client with ID: {}", id);
+    }
+
+    @Transactional
+    public void activateClient(Client client) {
+        clientDAO.activateClient(client);
+        logger.info("Activation of  client with ID: {}", client.getId());
     }
 
     public void printAllClients() {
@@ -65,5 +73,4 @@ public class ClientService {
         }
         logger.info("\n");
     }
-
 }

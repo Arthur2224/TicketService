@@ -1,23 +1,30 @@
 package org.example.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.example.DAOs.TicketDAO;
 import org.example.entities.Ticket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
 public class TicketService {
     private static final Logger logger = LoggerFactory.getLogger(TicketService.class);
     private final TicketDAO ticketDAO;
+    private ApplicationContext context;
 
     @Autowired
-    public TicketService(TicketDAO ticketDAO) {
+    public TicketService(TicketDAO ticketDAO, ApplicationContext context) {
         this.ticketDAO = ticketDAO;
+        this.context = context;
     }
 
     @Transactional
@@ -43,9 +50,9 @@ public class TicketService {
     }
 
     @Transactional
-    public void updateTicket(Long id, Ticket ticketDetails) {
-        ticketDAO.update(id, ticketDetails);
-        logger.info("Updated ticket with ID: {}", id);
+    public void updateTicket(Ticket ticketDetails) {
+        ticketDAO.update(ticketDetails);
+        logger.info("Updated ticket with ID: {}", ticketDetails.getId());
     }
 
     @Transactional
@@ -61,5 +68,22 @@ public class TicketService {
         } else {
             tickets.forEach(ticket -> logger.info("Ticket: {}", ticket));
         }
+    }
+
+    public List<Ticket> loadTickets() {
+        List<Ticket> tickets = null;
+        try {
+            Resource resource = context.getResource("classpath:tickets.json");
+            // Initialization of ObjectMapper and register the JavaTimeModule to handle LocalDateTime
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            tickets = objectMapper.readValue(resource.getInputStream(),
+                    objectMapper.getTypeFactory().constructCollectionType(List.class, Ticket.class));
+        } catch (IOException e) {
+            System.err.println("Error reading or parsing the tickets.json file: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return tickets;
     }
 }

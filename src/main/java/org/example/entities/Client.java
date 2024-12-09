@@ -6,6 +6,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+import org.example.enums.Status;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,6 +35,10 @@ public class Client extends User {
     @Email(message = "Email must be valid")
     private String email;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false, length = 15)
+    private Status status;
+
     public Client(String name, String email) {
         this.name = name;
         this.email = email;
@@ -42,6 +48,9 @@ public class Client extends User {
     @PrePersist
     public void onCreate() {
         createdAt = LocalDateTime.now();
+        if (status == null) {
+            status = Status.INACTIVE;
+        }
     }
 
     @PreUpdate
