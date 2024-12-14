@@ -1,55 +1,38 @@
 package org.example.services;
 
-import org.example.DAOs.TicketDAO;
 import org.example.entities.Ticket;
+import org.example.repositories.TicketRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
+@Service
 public class TicketService {
-    private final TicketDAO ticketDAO;
 
-    public TicketService(TicketDAO ticketDAO) {
-        this.ticketDAO = ticketDAO;
-    }
+    private final TicketRepository ticketRepository;
 
-    public void addTicket(Ticket ticket) {
-        ticketDAO.save(ticket);
-        System.out.println("Added new ticket with id: " + ticket.getId());
+    public TicketService(TicketRepository ticketRepository) {
+        this.ticketRepository = ticketRepository;
     }
 
     public List<Ticket> getAllTickets() {
-        List<Ticket> tickets = ticketDAO.getAll();
-        System.out.println("Fetched all tickets: " + tickets.size() + " ticket(s) found.");
-        return tickets;
+        return (List<Ticket>) ticketRepository.findAll();
     }
 
-    public Ticket getTicketById(Long id) {
-        Ticket ticket = ticketDAO.findById(id);
-        if (ticket != null) {
-            System.out.println("Found ticket by ID: " + id);
-        } else {
-            System.out.println("No ticket found with ID: " + id);
-        }
-        return ticket;
+    public List<Ticket> getAllClientsTickets(Long clientId) {
+        return (List<Ticket>) ticketRepository.findByClientId(clientId);
     }
 
-    public void updateTicket(Long id, Ticket ticketDetails) {
-        ticketDAO.update(id, ticketDetails);
-        System.out.println("Updating ticket with ID: " + id);
+    public Optional<Ticket> getByClientId(Long id) {
+        return ticketRepository.findById(id);
     }
 
-    public void delete(long id) {
-        ticketDAO.delete(id);
-        System.out.println("Removing ticket with ID: " + id);
+    public Ticket saveTicket(Ticket ticket) {
+        return ticketRepository.save(ticket);
     }
 
-    public void printAllTickets() {
-        List<Ticket> tickets = getAllTickets();
-        if (tickets.isEmpty()) {
-            System.out.println("No tickets found.");
-        } else {
-            tickets.forEach(ticket -> System.out.println(ticket));
-        }
-        System.out.println("\n");
+    public void deleteTicket(Long id) {
+        ticketRepository.deleteById(id);
     }
 }
