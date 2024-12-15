@@ -26,7 +26,7 @@ public class ClientService {
         clientDAO.save(client);
         logger.info("Added client: {} ({})", client.getName(), client.getEmail());
     }
-
+@Transactional
     public List<Client> getAllClients() {
         List<Client> clients = clientDAO.getAll();
         logger.info("Fetched all clients: {} client(s) found.", clients.size());
@@ -61,7 +61,7 @@ public class ClientService {
         clientDAO.activateClient(client);
         logger.info("Activation of  client with ID: {}", client.getId());
     }
-
+@Transactional
     public void printAllClients() {
         List<Client> clients = getAllClients();
         if (clients.isEmpty()) {
