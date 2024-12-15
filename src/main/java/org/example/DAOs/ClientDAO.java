@@ -1,98 +1,89 @@
 package org.example.DAOs;
 
 import org.example.entities.Client;
+import org.example.entities.Ticket;
 import org.example.exceptions.DAOException;
-import org.example.mappers.ClientMapper;
-import org.example.utilities.DatabaseConnection;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDAO implements DAO<Client> {
-    private final Connection connection;
-    private final ClientMapper clientMapper;
-    private final TicketDAO ticketDAO;
+    private final SessionFactory sessionFactory;
 
     public ClientDAO() {
-        this.connection = DatabaseConnection.getConnection();
-        clientMapper = new ClientMapper();
-        this.ticketDAO = new TicketDAO();
+        this.sessionFactory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(Client.class).buildSessionFactory();
     }
 
     @Override
     public Client findById(Long id) {
-        String sql = "SELECT * FROM clients WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return clientMapper.mapToClient(resultSet);
-            }
-        } catch (SQLException e) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery(
+                            "SELECT c FROM Client c LEFT JOIN FETCH c.tickets WHERE c.id = :id", Client.class)
+                    .setParameter("id", id)
+                    .uniqueResult();
+        } catch (Exception e) {
             throw new DAOException("Failed to find client by ID: " + id, e);
         }
-        return null;
     }
+
 
     @Override
     public List<Client> getAll() {
-        String sql = "SELECT * FROM clients";
-        List<Client> clients = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                clients.add(clientMapper.mapToClient(resultSet));
-            }
-        } catch (SQLException e) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM Client", Client.class).getResultList();
+        } catch (Exception e) {
             throw new DAOException("Failed to retrieve all clients", e);
         }
-        return clients;
     }
 
     @Override
     public void save(Client client) {
-        String sql = "INSERT INTO clients (name, created_at, updated_at, email) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            int rowsAffected = clientMapper.mapToPreparedStatement(statement, client).executeUpdate();
-            if (rowsAffected == 0) {
-                throw new DAOException("Failed to save client: No rows affected");
-            }
-        } catch (SQLException e) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.save(client);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
             throw new DAOException("Failed to save client: " + client, e);
         }
     }
 
     @Override
-    public void update(Long id, Client updatedClient) {
-        String sql = "UPDATE clients SET name = ?, email = ?, updated_at = ? WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            int rowsUpdated = clientMapper.mapToPreparedStatement(statement, updatedClient, id).executeUpdate();
-            if (rowsUpdated == 0) {
-                throw new DAOException("Failed to update client by ID: " + id);
+    public void update(Client client) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.update(client);
+            if (client.getTickets() != null) {
+                for (Ticket ticket : client.getTickets()) {
+                    session.update(ticket);
+                }
             }
-        } catch (SQLException e) {
-            throw new DAOException("Failed to update client by ID: " + updatedClient.getId(), e);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw new DAOException("Failed to update client and their tickets for client ID: " + client.getId(), e);
         }
     }
 
     @Override
     public void delete(Long id) {
-        ticketDAO.deleteAllClientTickets(id);
-        String sql = "DELETE FROM clients WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, id);
-            int rowsAffected = statement.executeUpdate();
-            if (rowsAffected == 0) {
-                System.out.println("Failed to delete client by ID: " + id);
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Client client = session.get(Client.class, id);
+            if (client != null) {
+                session.delete(client);
             }
-        } catch (SQLException e) {
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
             throw new DAOException("Failed to delete client by ID: " + id, e);
         }
     }
-
 
 }
