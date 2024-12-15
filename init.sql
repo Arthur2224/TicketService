@@ -4,7 +4,7 @@ CREATE TABLE clients (
     name VARCHAR(255) NOT NULL, 
     created_at TIMESTAMP, 
     updated_at TIMESTAMP, 
-    email VARCHAR(255)
+    email VARCHAR(255) UNIQUE
 );
 CREATE TABLE tickets (
     id BIGINT PRIMARY KEY,             
