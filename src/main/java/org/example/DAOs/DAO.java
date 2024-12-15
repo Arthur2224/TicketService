@@ -6,6 +6,6 @@ public interface DAO<T> {
     T findById(Long id);
     List<T> getAll();
     void save(T t);
-    void update(Long id,T t);
+    void update(T t);
     void delete(Long id);
 }

@@ -3,6 +3,9 @@ package org.example.mappers;
 import org.example.DAOs.ClientDAO;
 import org.example.entities.Ticket;
 import org.example.enums.StadiumSectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Component;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,11 +13,18 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
+@Component
 public class TicketMapper {
+    ClientDAO clientDAO;
+    @Autowired
+    @Lazy
+    public TicketMapper(ClientDAO clientDAO) {
+        this.clientDAO = clientDAO;
+    }
     public Ticket mapToTicket(ResultSet resultSet) throws SQLException {
         return Ticket.builder()
                 .id(resultSet.getLong("id"))
-                .client(new ClientDAO().findById(resultSet.getLong("client_id")))
+                .client(clientDAO.findById(resultSet.getLong("client_id")))
                 .concertHall(resultSet.getString("concert_hall"))
                 .eventCode(resultSet.getInt("event_code"))
                 .isPromo(resultSet.getBoolean("is_promo"))

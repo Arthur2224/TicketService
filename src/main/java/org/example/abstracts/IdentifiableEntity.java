@@ -1,6 +1,7 @@
 package org.example.abstracts;
 
-
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -11,7 +12,9 @@ import java.util.Random;
 @SuperBuilder
 @Getter
 @NoArgsConstructor
+@MappedSuperclass
 public abstract class IdentifiableEntity {
+    @Id
     @Nullable(key = "ID must not be NULL")
     protected Long id;
 

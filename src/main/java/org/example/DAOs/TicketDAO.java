@@ -2,107 +2,75 @@ package org.example.DAOs;
 
 import org.example.entities.Ticket;
 import org.example.exceptions.DAOException;
-import org.example.mappers.TicketMapper;
-import org.example.utilities.DatabaseConnection;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
-import java.sql.*;
-import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class TicketDAO implements DAO<Ticket> {
+    private final SessionFactory sessionFactory;
 
-    private final Connection connection;
-    private final TicketMapper ticketMapper;
+    @Autowired
+    public TicketDAO(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
-    public TicketDAO() {
-        this.connection = DatabaseConnection.getConnection();
-        this.ticketMapper = new TicketMapper();
+    private Session getSession() {
+        return sessionFactory.getCurrentSession();
     }
 
     @Override
     public Ticket findById(Long id) {
-        String sql = "SELECT * FROM tickets WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return ticketMapper.mapToTicket(resultSet);
-            }
-        } catch (SQLException e) {
+        try {
+            return getSession().get(Ticket.class, id);
+        } catch (Exception e) {
             throw new DAOException("Failed to find ticket with ID: " + id, e);
         }
-        return null;
     }
 
     @Override
     public List<Ticket> getAll() {
-        List<Ticket> tickets = new ArrayList<>();
-        String sql = "SELECT * FROM tickets";
-        try (Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
-            while (resultSet.next()) {
-                tickets.add(ticketMapper.mapToTicket(resultSet));
-            }
-        } catch (SQLException e) {
+        try {
+            return getSession().createQuery("from Ticket", Ticket.class).list();
+        } catch (Exception e) {
             throw new DAOException("Failed to fetch all tickets", e);
         }
-        return tickets;
     }
 
     @Override
     public void save(Ticket ticket) {
-        String sql = "INSERT INTO tickets (client_id, concert_hall, event_code, is_promo, stadium_sector, max_backpack_weight, price, creation_datetime, id) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            int rowsUpdated = ticketMapper.mapToPreparedStatementSave(statement, ticket).executeUpdate();
-            if (rowsUpdated == 0) {
-                throw new DAOException("Failed to save ticket by ID: " + ticket.getId());
-            }
-        } catch (SQLException e) {
-            throw new DAOException("Failed to save ticket ID: " + ticket.getId(), e);
+        try {
+            getSession().save(ticket);
+        } catch (Exception e) {
+            throw new DAOException("Failed to save ticket with ID: " + ticket.getId(), e);
         }
     }
 
     @Override
-    public void update(Long id, Ticket updatedTicket) {
-        String sql = "UPDATE tickets SET client_id = ?, concert_hall = ?, event_code = ?, is_promo = ?, stadium_sector = ?, max_backpack_weight = ?, price = ? " +
-                "WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            int rowsUpdated =ticketMapper.mapToPreparedStatementUpdate(statement, updatedTicket, id).executeUpdate();
-            if (rowsUpdated == 0) {
-                throw new DAOException("Failed to update ticket by ID: " + id);
+    public void update(Ticket updatedTicket) {
+        try {
+            if (getSession().get(Ticket.class, updatedTicket.getId()) != null) {
+                getSession().merge(updatedTicket);
             }
-        } catch (SQLException e) {
-            throw new DAOException("Failed to update ticket ID: " + id, e);
+        } catch (Exception e) {
+            throw new DAOException("Failed to update ticket with ID: " + updatedTicket.getId(), e);
         }
     }
 
     @Override
     public void delete(Long id) {
-        String sql = "DELETE FROM tickets WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, id);
-            int rowsAffected = statement.executeUpdate();
-            if (rowsAffected == 0) {
-                System.out.println("No tickets to delete for client ID: " + id);
+        try {
+            Ticket ticket = getSession().get(Ticket.class, id);
+            if (ticket != null) {
+                getSession().delete(ticket);
+            } else {
+                throw new DAOException("Failed to delete ticket with ID: " + id);
             }
-        } catch (SQLException e) {
-            throw new DAOException("Failed to delete ticket ID: " + id, e);
+        } catch (Exception e) {
+            throw new DAOException("Failed to delete ticket with ID: " + id, e);
         }
     }
-
-    public void deleteAllClientTickets(Long id) {
-        String sql = "DELETE FROM tickets WHERE client_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setLong(1, id);
-            int rowsAffected = statement.executeUpdate();
-            if (rowsAffected == 0) {
-                System.out.println("No tickets to delete for client ID: " + id);
-            }
-        } catch (SQLException e) {
-            throw new DAOException("Failed to delete ticket for client ID: " + id, e);
-        }
-    }
-
-
 }

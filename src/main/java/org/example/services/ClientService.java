@@ -2,56 +2,75 @@ package org.example.services;
 
 import org.example.DAOs.ClientDAO;
 import org.example.entities.Client;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@Service
 public class ClientService {
+    private static final Logger logger = LoggerFactory.getLogger(ClientService.class);
     private final ClientDAO clientDAO;
 
+    @Autowired
     public ClientService(ClientDAO clientDAO) {
         this.clientDAO = clientDAO;
     }
 
+    @Transactional
     public void addClient(Client client) {
         clientDAO.save(client);
-        System.out.println("Added client: " + client.getName() + " (" + client.getEmail() + ")");
+        logger.info("Added client: {} ({})", client.getName(), client.getEmail());
     }
 
     public List<Client> getAllClients() {
         List<Client> clients = clientDAO.getAll();
-        System.out.println("Fetched all clients: " + clients.size() + " client(s) found.");
+        logger.info("Fetched all clients: {} client(s) found.", clients.size());
         return clients;
     }
 
+    @Transactional
     public Client getClientById(Long id) {
         Client client = clientDAO.findById(id);
         if (client != null) {
-            System.out.println("Found client by ID: " + id + " - " + client.getName());
+            logger.info("Found client by ID: {} - {}", id, client.getName());
         } else {
-            System.out.println("No client found with ID: " + id);
+            logger.warn("No client found with ID: {}", id);
         }
         return client;
     }
 
-    public void updateClient(Long id, Client clientDetails) {
-        clientDAO.update(id, clientDetails);
-        System.out.println("Updated client with id: " + id + ")");
+    @Transactional
+    public void updateClient(Client clientDetails) {
+        clientDAO.update(clientDetails);
+        logger.info("Updated client with id: {}", clientDetails.getId());
     }
 
-    public void deleteClient(long id) {
+    @Transactional
+    public void deleteClient(Long id) {
         clientDAO.delete(id);
-        System.out.println("Deleted client with ID: " + id);
+        logger.info("Deleted client with ID: {}", id);
+    }
+
+    @Transactional
+    public void activateClient(Client client) {
+        clientDAO.activateClient(client);
+        logger.info("Activation of  client with ID: {}", client.getId());
     }
 
     public void printAllClients() {
         List<Client> clients = getAllClients();
         if (clients.isEmpty()) {
-            System.out.println("No clients found.");
+            logger.info("No clients found.");
         } else {
             clients.forEach(client ->
-                    System.out.println("ID: " + client.getId() + ", Name: " + client.getName() + ", Email: " + client.getEmail())
+                    logger.info("Client added: Name: {}, Email: {}", client.getName(), client.getEmail())
             );
         }
-        System.out.println("\n");
+        logger.info("\n");
     }
 }
