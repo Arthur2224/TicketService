@@ -2,6 +2,7 @@ package org.example.services;
 
 import org.example.DAOs.TicketDAO;
 import org.example.entities.Ticket;
+import org.example.exceptions.DAOException;
 
 import java.util.List;
 
@@ -12,12 +13,19 @@ public class TicketService {
         this.ticketDAO = ticketDAO;
     }
 
-    public void addTicket(Ticket ticket) {
+    public Ticket addTicket(Ticket ticket) {
         if (ticket == null || ticket.getId() == null) {
             throw new IllegalArgumentException("Ticket or Ticket ID cannot be null");
         }
-        ticketDAO.save(ticket);
-        System.out.println("Added new ticket with id: " + ticket.getId());
+        try {
+            ticketDAO.save(ticket);
+            System.out.println("Added new ticket with id: " + ticket.getId());
+            return ticket;
+        } catch (Exception e) {
+
+            throw new DAOException("Failed to add ticket", e);
+        }
+
     }
 
 
