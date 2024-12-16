@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -210,14 +211,20 @@ class TicketServiceTest {
         Client client = new Client();
         client.setName("John Doe");
 
-        Ticket ticket = new Ticket("Hall 3", 123, true, StadiumSectors.C, 10.0, new BigDecimal("50.00"), client);
-        List<Ticket> tickets = Collections.singletonList(ticket);
+        Ticket ticket1 = new Ticket("Hall 3", 123, true, StadiumSectors.C, 10.0, new BigDecimal("50.00"), client);
+        Ticket ticket2 = new Ticket("Hall 5", 124, false, StadiumSectors.A, 15.0, new BigDecimal("75.00"), client);
+
+        List<Ticket> tickets = Arrays.asList(ticket1, ticket2);
+
+        // Mocking the DAO to return the list of tickets
         when(ticketDAO.getAll()).thenReturn(tickets);
 
         ticketService.printAllTickets();
 
+        // Verifying that the getAll method was called once
         verify(ticketDAO, times(1)).getAll();
     }
+
 
     @Test
     void printAllTickets_WithNoTickets() {
