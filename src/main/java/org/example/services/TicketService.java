@@ -2,6 +2,7 @@ package org.example.services;
 
 import org.example.DAOs.TicketDAO;
 import org.example.entities.Ticket;
+import org.example.exceptions.DAOException;
 
 import java.util.List;
 
@@ -12,10 +13,21 @@ public class TicketService {
         this.ticketDAO = ticketDAO;
     }
 
-    public void addTicket(Ticket ticket) {
-        ticketDAO.save(ticket);
-        System.out.println("Added new ticket with id: " + ticket.getId());
+    public Ticket addTicket(Ticket ticket) {
+        if (ticket == null || ticket.getId() == null) {
+            throw new IllegalArgumentException("Ticket or Ticket ID cannot be null");
+        }
+        try {
+            ticketDAO.save(ticket);
+            System.out.println("Added new ticket with id: " + ticket.getId());
+            return ticket;
+        } catch (Exception e) {
+
+            throw new DAOException("Failed to add ticket", e);
+        }
+
     }
+
 
     public List<Ticket> getAllTickets() {
         List<Ticket> tickets = ticketDAO.getAll();
@@ -34,9 +46,21 @@ public class TicketService {
     }
 
     public void updateTicket(Ticket ticketDetails) {
+        if (ticketDetails == null) {
+            throw new IllegalArgumentException("Ticket cannot be null");
+        }
+        if (ticketDetails.getId() == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
+
+        if (ticketDAO.findById(ticketDetails.getId()) == null) {
+            throw new IllegalArgumentException("Ticket with ID " + ticketDetails.getId() + " not found");
+        }
+
         ticketDAO.update(ticketDetails);
         System.out.println("Updating ticket with ID: " + ticketDetails.getId());
     }
+
 
     public void delete(long id) {
         ticketDAO.delete(id);

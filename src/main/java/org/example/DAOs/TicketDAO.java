@@ -32,12 +32,13 @@ public class TicketDAO implements DAO<Ticket> {
     }
 
     @Override
-    public void save(Ticket ticket) {
+    public Ticket save(Ticket ticket) {
         Transaction transaction = null;
         try (Session session = SessionFactoryProvider.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
             session.save(ticket);
             transaction.commit();
+            return ticket;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
@@ -45,6 +46,7 @@ public class TicketDAO implements DAO<Ticket> {
             throw new DAOException("Failed to save ticket", e);
         }
     }
+
 
     @Override
     public void update(Ticket ticket) {

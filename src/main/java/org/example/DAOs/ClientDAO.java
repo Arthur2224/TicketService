@@ -40,12 +40,13 @@ public class ClientDAO implements DAO<Client> {
     }
 
     @Override
-    public void save(Client client) {
+    public Client save(Client client) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
             session.save(client);
             transaction.commit();
+            return client;
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
             throw new DAOException("Failed to save client: " + client, e);
